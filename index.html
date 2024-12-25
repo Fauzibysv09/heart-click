@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Animasi Love</title>
+<style>
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #a978a9; /* Warna pink agak ungu sedikit lebih gelap */
+    margin: 0;
+    overflow: hidden;
+    position: relative;
+  }
+  .love {
+    font-size: 4em; /* Membuat emoji lebih besar */
+    position: absolute;
+    opacity: 0;
+    animation: appear 1s forwards, visible 1s 1s forwards, disappear 3s 0s forwards;
+    animation-delay: var(--delay); /* Tambahkan delay animasi */
+  }
+  @keyframes appear {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+  @keyframes visible {
+    0% { opacity: 1; }
+    100% { opacity: 1; }
+  }
+  @keyframes disappear {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+  @keyframes explode {
+    0% { transform: translate(0, 0) scale(1); opacity: 1; }
+    100% { transform: translate(var(--dx), var(--dy)) scale(0.5); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+<script>
+  function createLoveEmoji() {
+    const emojiCount = Math.floor(Math.random() * 10) + 5; // Jumlah emoji random antara 5 hingga 15
+    for (let j = 0; j < emojiCount; j++) {
+      const love = document.createElement('div');
+      love.className = 'love';
+      love.innerText = '❤';
+      love.style.color = getRandomColor();
+      love.style.top = `${Math.random() * 100}vh`;
+      love.style.left = `${Math.random() * 100}vw`;
+      love.style.setProperty('--delay', `${Math.random()}s`); /* Delay random untuk kemunculan */
+      document.body.appendChild(love);
+
+      love.addEventListener('click', () => {
+        for (let i = 0; i < 10; i++) {
+          const smallLove = document.createElement('div');
+          smallLove.className = 'love';
+          smallLove.innerText = '❤';
+          smallLove.style.color = getRandomColor();
+          smallLove.style.top = `${parseFloat(love.style.top)}vh`;
+          smallLove.style.left = `${parseFloat(love.style.left)}vw`;
+          smallLove.style.setProperty('--dx', `${(Math.random() - 0.5) * 20}vw`);
+          smallLove.style.setProperty('--dy', `${(Math.random() - 0.5) * 20}vh`);
+          smallLove.style.animation = 'explode 2s forwards';
+          document.body.appendChild(smallLove);
+
+          setTimeout(() => smallLove.remove(), 2000);
+        }
+        love.remove();
+      });
+
+      setTimeout(() => love.remove(), 5000);
+    }
+  }
+
+  function getRandomColor() {
+    const colors = ['red', 'yellow', 'green', 'blue', 'purple', 'orange', 'pink'];
+    return colors[Math.floor(Math.random() * colors.length)];
+  }
+
+  setInterval(createLoveEmoji, 1000 + Math.random() * 3000); // Interval acak antara 1 hingga 4 detik
+</script>
+</body>
+</html>
